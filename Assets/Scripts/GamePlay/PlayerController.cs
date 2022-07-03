@@ -123,16 +123,12 @@ public class PlayerController : MonoBehaviour
     }
     public void DropDash()
     {
-        Vector3 Characterpos = transform.localPosition;
-        Characterpos.y -= 0.25f;
-        transform.localPosition = Characterpos;
-
-        Destroy(DashParent.transform.GetChild(0).gameObject);
-        for (int i = 0; i < DashParent.transform.childCount; i++)
-        {
-            Destroy(transform.GetChild(i).gameObject);
-        }
-
+        //Vector3 Characterpos = transform.localPosition;
+        //Characterpos.y -= 0.25f;
+        //transform.localPosition = Characterpos;
+        transform.position = new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z);
+        PrevDash.transform.position = new Vector3(PrevDash.transform.position.x, PrevDash.transform.position.y + 0.25f, PrevDash.transform.position.z);
+        tail.RemoveAt(tail.Count - 1);
+        Destroy(tail[tail.Count - 1]);
     }
-
 }

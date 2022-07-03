@@ -17,19 +17,13 @@ public class StackScript : MonoBehaviour
             other.gameObject.GetComponent<Rigidbody>().isKinematic = true;
             other.gameObject.AddComponent<StackScript>();
             PlayerController.Instance.tail.Add(other.gameObject);
-            Destroy(this);
 
         }
-        if ((other.tag == "UnPickup"))
+        if (other.tag == "UnPickup")
         {
-
             Debug.Log("Hit");
-
-            PlayerController.Instance.tail.ElementAt(PlayerController.Instance.tail.Count - 1).gameObject.SetActive(false);
-            PlayerController.Instance.tail.RemoveAt(PlayerController.Instance.tail.Count - 1);
-            Destroy(other);
-
-
+            PlayerController.Instance.DropDash();
+            Destroy(other.gameObject);
         }
     }
 }
