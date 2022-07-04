@@ -38,11 +38,11 @@ public class PlayerController : MonoBehaviour
 
     //}
 
-    public static PlayerController Instance;
+
     private Rigidbody _rb;
 
-    public GameObject DashParent;
-    public GameObject PrevDash;
+    public GameObject StackParent;
+    public GameObject MainStack;
 
     private Vector2 _firstPos;
     private Vector2 _secondPos;
@@ -51,9 +51,16 @@ public class PlayerController : MonoBehaviour
     public float _moveSpeed;
 
     public List<GameObject> tail = new List<GameObject>();
+    public static PlayerController Instance { get; private set; }
     private void Awake()
     {
-        if (Instance == null)
+        // If there is an instance, and it's not me, delete myself.
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
         {
             Instance = this;
         }
@@ -109,26 +116,32 @@ public class PlayerController : MonoBehaviour
             _rb.velocity = Vector3.left * _moveSpeed;
         }
     }
-    public void PickDash(GameObject dashob)
+    public void PickStack(GameObject stackob)
     {
-        dashob.transform.SetParent(DashParent.transform);
-        Vector3 pos = PrevDash.transform.localPosition;
+        stackob.transform.SetParent(StackParent.transform);
+        Vector3 pos = MainStack.transform.localPosition;
         pos.y -= 0.25f;
-        dashob.transform.localPosition = pos;
+        stackob.transform.localPosition = pos;
         Vector3 Characterpos = transform.localPosition;
         Characterpos.y += 0.25f;
         transform.localPosition = Characterpos;
-        PrevDash = dashob;
-        PrevDash.GetComponent<BoxCollider>().isTrigger = false;
+        MainStack = stackob;
+        MainStack.GetComponent<BoxCollider>().isTrigger = false;
+        tail.Add(stackob);
     }
-    public void DropDash()
+    public void DropStack()
     {
-        //Vector3 Characterpos = transform.localPosition;
-        //Characterpos.y -= 0.25f;
-        //transform.localPosition = Characterpos;
         transform.position = new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z);
-        PrevDash.transform.position = new Vector3(PrevDash.transform.position.x, PrevDash.transform.position.y + 0.25f, PrevDash.transform.position.z);
+        MainStack.transform.position = new Vector3(MainStack.transform.position.x, MainStack.transform.position.y + 0.25f, MainStack.transform.position.z);
         tail.RemoveAt(tail.Count - 1);
         Destroy(tail[tail.Count - 1]);
+    }
+    public void DropAllStack()
+    {
+        foreach (GameObject go in tail)
+        {
+            tail.Remove(go);
+            GameObject.Destroy(go);
+        }
     }
 }
