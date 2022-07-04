@@ -11,7 +11,7 @@ public class StackScript : MonoBehaviour
         if (other.tag == "Pickup")
         {
             other.gameObject.tag = "normal";
-            PlayerController.Instance.PickStack(other.gameObject);
+            PlayerController.Ins.PickStack(other.gameObject);
             other.gameObject.AddComponent<Rigidbody>();
             other.gameObject.GetComponent<Rigidbody>().useGravity = false;
             other.gameObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -22,13 +22,13 @@ public class StackScript : MonoBehaviour
         if (other.tag == "UnPickup")
         {
             Debug.Log("Hit");
-            PlayerController.Instance.DropStack();
+            PlayerController.Ins.DropStack();
             Destroy(other.gameObject);
         }
         if (other.tag == "Finish")
         {
             Debug.Log("Finish");
-            PlayerController.Instance.DropAllStack();
+            PlayerController.Ins.DropAllStack();
         }
     }
 }

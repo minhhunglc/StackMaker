@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
     //private void Update()
     //{
@@ -51,20 +51,7 @@ public class PlayerController : MonoBehaviour
     public float _moveSpeed;
 
     public List<GameObject> tail = new List<GameObject>();
-    public static PlayerController Instance { get; private set; }
-    private void Awake()
-    {
-        // If there is an instance, and it's not me, delete myself.
 
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();

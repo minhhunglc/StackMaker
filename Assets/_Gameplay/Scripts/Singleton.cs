@@ -23,4 +23,8 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             return ins;
         }
     }
+    protected virtual void Awake()
+    {
+        ins = this as T;
+    }
 }

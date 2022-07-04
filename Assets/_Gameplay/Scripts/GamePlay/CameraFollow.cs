@@ -2,27 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour
+public class CameraFollow : Singleton<CameraFollow>
 {
-    public Transform Target;
-    public Transform Camera;
-    Vector3 tempVec3 = new Vector3();
+    public Transform target;
+    public Vector3 offset;
+    public float smoothSpeed = 0.125f;
 
-    void LateUpdate()
+    private void LateUpdate()
     {
-        if (Target != null)
-        {
-            tempVec3.x = Target.position.x;
-            tempVec3.y = this.transform.position.y;
-            tempVec3.z = this.transform.position.z;
-            this.transform.position = tempVec3;
-        }
-        else if (Target == null)
-        {
-            tempVec3.x = Camera.position.x;
-            tempVec3.y = Camera.transform.position.y;
-            tempVec3.z = Camera.transform.position.z;
-            Camera.transform.position = tempVec3;
-        }
+        Vector3 desiredPosition = target.position + offset;
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        transform.position = smoothedPosition;
     }
+
 }
