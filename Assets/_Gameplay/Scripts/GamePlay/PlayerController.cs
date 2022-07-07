@@ -1,134 +1,142 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
 {
-    //private void Update()
-    //{
+    public Direction _currentState;
+    public Rigidbody _rb;
 
-    //    //Vector3 dir = new Vector3(); //(0,0,0)
-
-
-    //    //if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-    //    //    dir.z += 1.0f;
-    //    //else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-    //    //    dir.x -= 1.0f;
-    //    //else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-    //    //    dir.z -= 1.0f;
-    //    //else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-    //    //    dir.x += 1.0f;
-
-    //    //dir.Normalize();
-    //    //transform.Translate(dir * CharacterSpeed * Time.deltaTime);
-
-    //    //var up = transform.TransformDirection(Vector3.right);
-    //    //RaycastHit hit;
-    //    //Debug.DrawRay(transform.position, up, Color.green);
-
-    //    //if (Physics.Raycast(transform.position, up, out hit, 10))
-    //    //{
-    //    //    Debug.Log("HIT");
-    //    //    if (hit.collider.gameObject.name == "Wall")
-    //    //    {
-
-    //    //    }
-    //    //}
-
-
-    //}
-
-
-    private Rigidbody _rb;
-
-    public GameObject StackParent;
-    public GameObject MainStack;
-
-    private Vector2 _firstPos;
-    private Vector2 _secondPos;
-    public Vector2 _currentPos;
+    //private Vector2 _firstPos;
+    //private Vector2 _secondPos;
+    //public Vector2 _currentPos;
 
     public float _moveSpeed;
+    public bool isMoving = true;
 
-    public List<GameObject> tail = new List<GameObject>();
+    public bool lockUp;
+    public bool lockDown;
+    public bool lockLeft;
+    public bool lockRight;
 
+    public Transform Body;
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        isMoving = true;
     }
-    private void Update()
+    private void Update() => PlayerMovement();
+    public void AssignDirectionFromState()
     {
-        SwipePlayer();
-        Debug.Log(tail.Count);
+        switch (_currentState)
+        {
+            case Direction.Up:
+                _rb.velocity = Vector3.forward * _moveSpeed;
+                Body.transform.rotation = Quaternion.Euler(0, 0, 0);
+                break;
+            case Direction.Down:
+                _rb.velocity = Vector3.back * _moveSpeed;
+                Body.transform.rotation = Quaternion.Euler(0, 180, 0);
+                break;
+            case Direction.Left:
+                _rb.velocity = Vector3.left * _moveSpeed;
+                Body.transform.rotation = Quaternion.Euler(0, -90, 0);
+                break;
+            case Direction.Right:
+                _rb.velocity = Vector3.right * _moveSpeed;
+                Body.transform.rotation = Quaternion.Euler(0, 90, 0);
+                break;
+        }
+    }
+    private void PlayerMovement()
+    {
+        #region Test mouse swipe
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    _firstPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        //    Debug.Log(_firstPos);
+        //}
+
+        //if (Input.GetMouseButtonUp(0))
+        //{
+        //    _secondPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+        //    _currentPos = new Vector2(
+        //        _secondPos.x - _firstPos.x,
+        //        _secondPos.y - _firstPos.y
+        //    );
+
+        //    _currentPos.Normalize();
+        //}
+
+        //if (isMoving)
+        //{
+        //    if (_currentPos.y > 0 && _currentPos.x > -0.5f && _currentPos.x < 0.5f && !lockUp)
+        //    {
+        //        // Up
+        //        _currentState = Direction.Up;
+        //        AssignDirectionFromState();
+        //    }
+        //    if (_currentPos.y < 0 && _currentPos.x > -0.5f && _currentPos.x < 0.5f && !lockDown)
+        //    {
+        //        // Down
+        //        _currentState = Direction.Down;
+        //        AssignDirectionFromState();
+        //    }
+        //    if (_currentPos.x > 0 && _currentPos.y > -0.5f && _currentPos.y < 0.5f && !lockRight)
+        //    {
+        //        // Right
+        //        _currentState = Direction.Right;
+        //        AssignDirectionFromState();
+        //    }
+        //    if (_currentPos.x < 0 && _currentPos.y > -0.5f && _currentPos.y < 0.5f && !!lockLeft)
+        //    {
+        //        // Left
+        //        _currentState = Direction.Left;
+        //        AssignDirectionFromState();
+        //    }
+        //}
+        #endregion
+
+        if (isMoving)
+        {
+            if ((Input.GetKey(KeyCode.LeftArrow)) && lockLeft == false)
+            {
+                _currentState = Direction.Left;
+                AssignDirectionFromState();
+            }
+            if ((Input.GetKey(KeyCode.RightArrow)) && lockRight == false)
+            {
+                _currentState = Direction.Right;
+                AssignDirectionFromState();
+            }
+            if ((Input.GetKey(KeyCode.UpArrow)) && lockUp == false)
+            {
+                _currentState = Direction.Up;
+                AssignDirectionFromState();
+            }
+            if ((Input.GetKey(KeyCode.DownArrow)) && lockDown == false)
+            {
+                _currentState = Direction.Down;
+                AssignDirectionFromState();
+            }
+        }
+
+    }
+    public void ChangeDirection(Direction directionStart1, Direction directionEnd1, Direction directionStart2, Direction directionEnd2)
+    {
+        if (_currentState == directionStart1)
+        {
+            _currentState = directionEnd1;
+            AssignDirectionFromState();
+        }
+        else if (_currentState == directionStart2)
+        {
+            _currentState = directionEnd2;
+            AssignDirectionFromState();
+        }
     }
 
-    private void SwipePlayer()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            _firstPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            Debug.Log(_firstPos);
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            _secondPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-
-            _currentPos = new Vector2(
-                _secondPos.x - _firstPos.x,
-                _secondPos.y - _firstPos.y
-            );
-
-            _currentPos.Normalize();
-        }
-
-        if (_currentPos.y > 0 && _currentPos.x > -0.5f && _currentPos.x < 0.5f)
-        {
-            // Forward
-            _rb.velocity = Vector3.forward * _moveSpeed;
-        }
-        else if (_currentPos.y < 0 && _currentPos.x > -0.5f && _currentPos.x < 0.5f)
-        {
-            // Back
-            _rb.velocity = Vector3.back * _moveSpeed;
-        }
-        else if (_currentPos.x > 0 && _currentPos.y > -0.5f && _currentPos.y < 0.5f)
-        {
-            // Right
-            _rb.velocity = Vector3.right * _moveSpeed;
-        }
-        else if (_currentPos.x < 0 && _currentPos.y > -0.5f && _currentPos.y < 0.5f)
-        {
-            // Left
-            _rb.velocity = Vector3.left * _moveSpeed;
-        }
-    }
-    public void PickStack(GameObject stackob)
-    {
-        stackob.transform.SetParent(StackParent.transform);
-        Vector3 pos = MainStack.transform.localPosition;
-        pos.y -= 0.25f;
-        stackob.transform.localPosition = pos;
-        Vector3 Characterpos = transform.localPosition;
-        Characterpos.y += 0.25f;
-        transform.localPosition = Characterpos;
-        MainStack = stackob;
-        MainStack.GetComponent<BoxCollider>().isTrigger = false;
-        tail.Add(stackob);
-    }
-    public void DropStack()
-    {
-        transform.position = new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z);
-        MainStack.transform.position = new Vector3(MainStack.transform.position.x, MainStack.transform.position.y + 0.25f, MainStack.transform.position.z);
-        tail.RemoveAt(tail.Count - 1);
-        Destroy(tail[tail.Count - 1]);
-    }
-    public void DropAllStack()
-    {
-        foreach (GameObject go in tail)
-        {
-            tail.Remove(go);
-            GameObject.Destroy(go);
-        }
-    }
 }

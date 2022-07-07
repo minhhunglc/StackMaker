@@ -8,7 +8,10 @@ TagManager:
   - normal
   - Pickup
   - UnPickup
-  - bad
+  - Push180
+  - Push0
+  - Push90
+  - Push270
   layers:
   - Default
   - TransparentFX
@@ -18,7 +21,7 @@ TagManager:
   - UI
   - Player
   - Wall
-  - 
+  - PinkPush
   - 
   - 
   - 
