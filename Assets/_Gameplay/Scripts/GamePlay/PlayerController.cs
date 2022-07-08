@@ -22,6 +22,10 @@ public class PlayerController : Singleton<PlayerController>
     public bool lockRight;
 
     public Transform Body;
+
+    private Vector2 _firstPos;
+    private Vector2 _secondPos;
+    public Vector2 _currentPos;
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -52,72 +56,25 @@ public class PlayerController : Singleton<PlayerController>
     }
     private void PlayerMovement()
     {
-        #region Test mouse swipe
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    _firstPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        //    Debug.Log(_firstPos);
-        //}
-
-        //if (Input.GetMouseButtonUp(0))
-        //{
-        //    _secondPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-
-        //    _currentPos = new Vector2(
-        //        _secondPos.x - _firstPos.x,
-        //        _secondPos.y - _firstPos.y
-        //    );
-
-        //    _currentPos.Normalize();
-        //}
-
-        //if (isMoving)
-        //{
-        //    if (_currentPos.y > 0 && _currentPos.x > -0.5f && _currentPos.x < 0.5f && !lockUp)
-        //    {
-        //        // Up
-        //        _currentState = Direction.Up;
-        //        AssignDirectionFromState();
-        //    }
-        //    if (_currentPos.y < 0 && _currentPos.x > -0.5f && _currentPos.x < 0.5f && !lockDown)
-        //    {
-        //        // Down
-        //        _currentState = Direction.Down;
-        //        AssignDirectionFromState();
-        //    }
-        //    if (_currentPos.x > 0 && _currentPos.y > -0.5f && _currentPos.y < 0.5f && !lockRight)
-        //    {
-        //        // Right
-        //        _currentState = Direction.Right;
-        //        AssignDirectionFromState();
-        //    }
-        //    if (_currentPos.x < 0 && _currentPos.y > -0.5f && _currentPos.y < 0.5f && !!lockLeft)
-        //    {
-        //        // Left
-        //        _currentState = Direction.Left;
-        //        AssignDirectionFromState();
-        //    }
-        //}
-        #endregion
-
+        MouseButtonCheck();
         if (isMoving)
         {
-            if ((Input.GetKey(KeyCode.LeftArrow)) && lockLeft == false)
+            if ((Input.GetKey(KeyCode.LeftArrow)) || (_currentPos.x < 0 && _currentPos.y > -0.5f && _currentPos.y < 0.5f) && lockLeft == false)
             {
                 _currentState = Direction.Left;
                 AssignDirectionFromState();
             }
-            if ((Input.GetKey(KeyCode.RightArrow)) && lockRight == false)
+            if ((Input.GetKey(KeyCode.RightArrow)) || (_currentPos.x > 0 && _currentPos.y > -0.5f && _currentPos.y < 0.5f) && lockRight == false)
             {
                 _currentState = Direction.Right;
                 AssignDirectionFromState();
             }
-            if ((Input.GetKey(KeyCode.UpArrow)) && lockUp == false)
+            if ((Input.GetKey(KeyCode.UpArrow)) || (_currentPos.y > 0 && _currentPos.x > -0.5f && _currentPos.x < 0.5f) && lockUp == false)
             {
                 _currentState = Direction.Up;
                 AssignDirectionFromState();
             }
-            if ((Input.GetKey(KeyCode.DownArrow)) && lockDown == false)
+            if ((Input.GetKey(KeyCode.DownArrow)) || (_currentPos.y < 0 && _currentPos.x > -0.5f && _currentPos.x < 0.5f) && lockDown == false)
             {
                 _currentState = Direction.Down;
                 AssignDirectionFromState();
@@ -138,5 +95,24 @@ public class PlayerController : Singleton<PlayerController>
             AssignDirectionFromState();
         }
     }
+    public void MouseButtonCheck()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            _firstPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            Debug.Log(_firstPos);
+        }
 
+        if (Input.GetMouseButtonUp(0))
+        {
+            _secondPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+            _currentPos = new Vector2(
+                _secondPos.x - _firstPos.x,
+                _secondPos.y - _firstPos.y
+            );
+
+            _currentPos.Normalize();
+        }
+    }
 }
