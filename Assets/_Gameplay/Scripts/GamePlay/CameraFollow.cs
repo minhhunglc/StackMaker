@@ -6,7 +6,7 @@ public class CameraFollow : Singleton<CameraFollow>
 {
     public Transform target;
     public Vector3 offset;
-    public float smoothSpeed = 0.125f;
+    public float smoothSpeed = 2f;
 
     private void Update()
     {
