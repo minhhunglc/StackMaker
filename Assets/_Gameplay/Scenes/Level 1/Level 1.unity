@@ -15121,7 +15121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 4362796166346438268}
   offset: {x: 0, y: 8, z: -11}
-  smoothSpeed: 0.5
+  smoothSpeed: 2
 --- !u!1001 &964845172
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30715,9 +30715,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4929655242427421203, guid: 0960c11bec2ef3649afc17d95a259711, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4929655242427421203, guid: 0960c11bec2ef3649afc17d95a259711, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4930531131076909741, guid: 0960c11bec2ef3649afc17d95a259711, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7275981787192018233, guid: 0960c11bec2ef3649afc17d95a259711, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7275981787192018233, guid: 0960c11bec2ef3649afc17d95a259711, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0960c11bec2ef3649afc17d95a259711, type: 3}
